@@ -2,8 +2,12 @@
     d3.labeler = function() {
         var lab = [],
             anc = [],
-            w = 1, // box width
-            h = 1, // box width
+            boundary = { // hard boundary
+                left: 0,
+                top: 0,
+                right: 1,
+                bottom: 1
+            };
             labeler = {};
 
         var max_move = 5.0,
@@ -134,10 +138,10 @@
             move(i);
 
             // hard wall boundaries
-            if (lab[i].x > w || lab[i].x < 0) {
+            if (lab[i].x > boundary.right || lab[i].x < boundary.left) {
                 lab[i].x = lold.x;
             }
-            if (lab[i].y > h || lab[i].y < 0) {
+            if (lab[i].y > boundary.bottom || lab[i].y < boundary.top) {
                 lab[i].y = lold.y;
             }
 
@@ -188,21 +192,15 @@
             }
         };
 
-        labeler.width = function(x) {
-            // users insert graph width
+        labeler.boundary = function(x) {
+            // boundary box
             if (!arguments.length) {
-                return w;
+                return boundary;
             }
-            w = x;
-            return labeler;
-        };
-
-        labeler.height = function(x) {
-            // users insert graph height
-            if (!arguments.length) {
-                return h;
-            }
-            h = x;
+            boundary.left = x.left;
+            boundary.top = x.top;
+            boundary.right = x.right;
+            boundary.bottom = x.bottom;
             return labeler;
         };
 
